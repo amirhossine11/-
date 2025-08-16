@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameBad - دانلود بازی‌های موبایلی پرطرفدار</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&family=Bungee&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Vazirmatn', 'Segoe UI', Tahoma, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #0d47a1 100%);
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+            text-align: right;
+            min-height: 100vh;
+            background-attachment: fixed;
+        }
+
+        header {
+            background-color: rgba(13, 110, 253, 0.8);
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            animation: fadeIn 1s ease-in-out;
+            position: relative;
+        }
+
+        .logo {
+            font-family: 'Bungee', sans-serif;
+            font-size: 48px;
+            color: #0d6efd;
+            text-shadow: 0 0 5px #0d6efd, 0 0 10px #0d6efd;
+            animation: neonGlow 3s ease-in-out infinite;
+        }
+
+        /* منوی همبرگری */
+        .hamburger {
+            display: none;
+            font-size: 30px;
+            background: none;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            padding: 0;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 30px;
+            height: 3px;
+            background-color: #fff;
+            margin: 6px auto;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(8px, -8px);
+        }
+
+        .nav-menu {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .nav-menu button {
+            background-color: #198754;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .nav-menu button:hover {
+            background-color: #0d6efd;
+        }
+
+        .nav-menu button.active {
+            background-color: #0d6efd;
+        }
+
+        .nav-menu.active {
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+            top: 70px;
+            left: 0;
+            background-color: rgba(13, 110, 253, 0.9);
+            width: 100%;
+            padding: 20px;
+            border-radius: 0 0 10px 10px;
+            z-index: 1000;
+            animation: slideDown 0.3s ease-in-out;
+        }
+
+        #search {
+            width: 100%;
+            max-width: 600px;
+            padding: 12px;
+            margin: 10px auto;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+            background-color: #2c2c2c;
+            color: #fff;
+            display: block;
+            transition: box-shadow 0.3s;
+        }
+
+        #search:focus {
+            box-shadow: 0 0 10px #0d6efd;
+        }
+
+        #search::placeholder {
+            color: #aaa;
+        }
+
+        .filters {
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        .filter-btn {
+            background-color: #198754;
+            color: white;
+            padding: 8px 15px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .filter-btn:hover {
+            background-color: #157347;
+        }
+
+        .filter-btn.active {
+            background-color: #0d6efd;
+        }
+
+        .section-title {
+            color: #0d6efd;
+            margin: 20px 0;
+            font-size: 24px;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            padding: 0 10px;
+        }
+
+        .game-card {
+            background-color: rgba(44, 44, 44, 0.9);
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            opacity: 0;
+            transform: translateX(-50px);
+            animation: slideInLeft 0.6s ease-in-out forwards;
+        }
+
+        .game-card:nth-child(even) {
+            transform: translateX(50px);
+            animation: slideInRight 0.6s ease-in-out forwards;
+        }
+
+        .game-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(13, 110, 253, 0.6);
+        }
+
+        .game-logo {
+            width: 100px;
+            height: 100px;
+            display: block;
+            margin: 0 auto 10px;
+            border-radius: 50%;
+            object-fit: contain;
+        }
+
+        .game-card h3 {
+            color: #0d6efd;
+            margin-bottom: 10px;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .game-card p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .download-btn {
+            background-color: #198754;
+            color: white;
+            padding: 8px 15px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+            transition: background-color 0.5s ease;
+        }
+
+        .download-btn:hover {
+            background-color: #0d6efd;
+        }
+
+        .favorite-btn {
+            background-color: #ffca28;
+            color: #1a1a1a;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .favorite-btn:hover {
+            background-color: #ffb300;
+        }
+
+        .favorite-btn.active {
+            background-color: #d81b60;
+            color: white;
+        }
+
+        .dashboard-content {
+            display: none;
+            background-color: rgba(44, 44, 44, 0.9);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .dashboard-content.active {
+            display: block;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .news-card {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            transition: transform 0.3s ease;
+            animation: slideInLeft 0.6s ease-in-out forwards;
+        }
+
+        .news-card:hover {
+            transform: scale(1.03);
+        }
+
+        .support-form,
+        .report-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .support-form input,
+        .support-form textarea,
+        .report-form input,
+        .report-form textarea {
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            background-color: #2c2c2c;
+            color: #fff;
+        }
+
+        .support-form textarea,
+        .report-form textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .submit-btn {
+            background-color: #198754;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #0d6efd;
+        }
+
+        .about-section {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes neonGlow {
+            0% {
+                text-shadow: 0 0 5px #0d6efd, 0 0 10px #0d6efd;
+            }
+
+            50% {
+                text-shadow: 0 0 10px #0d6efd, 0 0 15px #0d6efd;
+            }
+
+            100% {
+                text-shadow: 0 0 5px #0d6efd, 0 0 10px #0d6efd;
+            }
+        }
+
+        .game-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .game-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .game-card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .game-card:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .game-card:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+
+        @media (max-width: 600px) {
+
+            .games-grid,
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .game-card,
+            .news-card {
+                padding: 10px;
+            }
+
+            .game-card h3,
+            .news-card h3 {
+                font-size: 16px;
+            }
+
+            .game-card p,
+            .news-card p {
+                font-size: 12px;
+            }
+
+            .download-btn,
+            .submit-btn,
+            .favorite-btn {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+
+            header {
+                padding: 15px;
+            }
+
+            .logo {
+                font-size: 36px;
+            }
+
+            .game-logo {
+                width: 80px;
+                height: 80px;
+            }
+
+            .hamburger {
+                display: block;
+            }
+
+            .nav-menu {
+                display: none;
+            }
+
+            .nav-menu.active {
+                display: flex;
+            }
+        }
+
+        @media (min-width: 601px) and (max-width: 900px) {
+            .games-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .news-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1 class="logo">GameBad</h1>
+        <p>دانلود بهترین بازی‌های موبایلی - توسط امیرحسین</p>
+        <button class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <div class="nav-menu">
+            <button class="dashboard-btn active" data-section="home">خانه</button>
+            <button class="dashboard-btn" data-section="news">اخبار</button>
+            <button class="dashboard-btn" data-section="favorites">علاقه‌مندی‌ها</button>
+            <button class="dashboard-btn" data-section="support">پشتیبانی</button>
+            <button class="dashboard-btn" data-section="report">گزارش خطا</button>
+            <button class="dashboard-btn" data-section="about">درباره ما</button>
+        </div>
+    </header>
+
+    <input type="text" id="search" placeholder="جستجوی بازی (مثل پابجی یا کندی)...">
+
+    <div class="filters">
+        <button class="filter-btn active" data-filter="all">همه</button>
+        <button class="filter-btn" data-filter="آنلاین">آنلاین</button>
+        <button class="filter-btn" data-filter="آفلاین">آفلاین</button>
+        <button class="filter-btn" data-genre="بتل رویال">بتل رویال</button>
+        <button class="filter-btn" data-genre="پازل">پازل</button>
+        <button class="filter-btn" data-genre="اکشن">اکشن</button>
+    </div>
+
+    <section class="dashboard-content" id="home">
+        <section id="top-games">
+            <h2 class="section-title">۵ بازی پرطرفدار</h2>
+            <div class="games-grid" id="top-grid"></div>
+        </section>
+        <section id="suggested-games">
+            <h2 class="section-title">بازی‌های پیشنهادی</h2>
+            <div class="games-grid" id="suggested-grid"></div>
+        </section>
+    </section>
+
+    <section class="dashboard-content" id="news">
+        <h2 class="section-title">اخبار دنیای گیم</h2>
+        <div class="news-grid">
+            <div class="news-card">
+                <h3>بروزرسانی جدید پابجی موبایل</h3>
+                <p>نسخه جدید با نقشه‌های جدید و آیتم‌های جذاب منتشر شد! - ۱ آبان ۱۴۰۴</p>
+            </div>
+            <div class="news-card">
+                <h3>فری فایر: رویداد هالووین</h3>
+                <p>رویداد ویژه هالووین با جوایز محدود شروع شد. - ۳۰ مهر ۱۴۰۴</p>
+            </div>
+            <div class="news-card">
+                <h3>رونمایی از بازی جدید استودیو Supercell</h3>
+                <p>بازی جدید در سبک استراتژی معرفی شد. - ۱۵ مهر ۱۴۰۴</p>
+            </div>
+            <div class="news-card">
+                <h3>فورتنایت: همکاری با مارول</h3>
+                <p>اسکین‌های جدید مارول به بازی اضافه شدند. - ۱۰ مهر ۱۴۰۴</p>
+            </div>
+            <div class="news-card">
+                <h3>کندی کراش: ۵۰۰۰ سطح جدید</h3>
+                <p>مراحل جدید و چالش‌برانگیز به بازی اضافه شد. - ۵ مهر ۱۴۰۴</p>
+            </div>
+            <div class="news-card">
+                <h3>رابلاکس: آپدیت پلتفرم</h3>
+                <p>ابزارهای جدید برای سازندگان منتشر شد. - ۱ مهر ۱۴۰۴</p>
+            </div>
+            <div class="news-card">
+                <h3>کلش آف کلنز: رویداد سالگرد</h3>
+                <p>جوایز ویژه به مناسبت سالگرد بازی. - ۲۵ شهریور ۱۴۰۴</p>
+            </div>
+            <div class="news-card">
+                <h3>آمونگ آس: نقشه جدید</h3>
+                <p>نقشه فضایی جدید معرفی شد. - ۲۰ شهریور ۱۴۰۴</p>
+            </div>
+            <div class="news-card">
+                <h3>کال آو دیوتی موبایل: سیزن جدید</h3>
+                <p>سیزن جدید با تم جنگ سرد شروع شد. - ۱۵ شهریور ۱۴۰۴</p>
+            </div>
+            <div class="news-card">
+                <h3>ماینکرفت: آپدیت غارها</h3>
+                <p>بروزرسانی غارها و صخره‌ها منتشر شد. - ۱۰ شهریور ۱۴۰۴</p>
+            </div>
+            <div class="news-card">
+                <h3>جشنواره بازی‌های مستقل</h3>
+                <p>بازی‌های مستقل جدید معرفی شدند. - ۵ شهریور ۱۴۰۴</p>
+            </div>
+            <div class="news-card">
+                <h3>اسکین‌های جدید فری فایر</h3>
+                <p>اسکین‌های محدود برای رویداد تابستانه. - ۱ شهریور ۱۴۰۴</p>
+            </div>
+            <div class="news-card">
+                <h3>رونمایی از بازی ریسینگ جدید</h3>
+                <p>بازی ریسینگ با گرافیک خیره‌کننده معرفی شد. - ۲۵ مرداد ۱۴۰۴</p>
+            </div>
+            <div class="news-card">
+                <h3>پابجی: همکاری با تسلا</h3>
+                <p>ماشین‌های تسلا به بازی اضافه شدند. - ۲۰ مرداد ۱۴۰۴</p>
+            </div>
+            <div class="news-card">
+                <h3>کلش رویال: کارت‌های جدید</h3>
+                <p>کارت‌های جدید با قابلیت‌های ویژه معرفی شدند. - ۱۵ مرداد ۱۴۰۴</p>
+            </div>
+            <div class="news-card">
+                <h3>فورتنایت: کنسرت مجازی</h3>
+                <p>کنسرت مجازی جدید با حضور خواننده معروف. - ۱۰ مرداد ۱۴۰۴</p>
+            </div>
+            <div class="news-card">
+                <h3>سابوی سرفرز: شهر جدید</h3>
+                <p>شهر توکیو به بازی اضافه شد. - ۵ مرداد ۱۴۰۴</p>
+            </div>
+            <div class="news-card">
+                <h3>رابلاکس: ابزار هوش مصنوعی</h3>
+                <p>ابزارهای AI برای توسعه‌دهندگان منتشر شد. - ۱ مرداد ۱۴۰۴</p>
+            </div>
+            <div class="news-card">
+                <h3>کندی کراش: رویداد ویژه</h3>
+                <p>رویداد تابستانه با جوایز جذاب. - ۲۵ تیر ۱۴۰۴</p>
+            </div>
+            <div class="news-card">
+                <h3>آپدیت جدید ماینکرفت</h3>
+                <p>حیوانات جدید به بازی اضافه شدند. - ۲۰ تیر ۱۴۰۴</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="dashboard-content" id="favorites">
+        <h2 class="section-title">علاقه‌مندی‌ها</h2>
+        <div class="games-grid" id="favorites-grid"></div>
+    </section>
+
+    <section class="dashboard-content" id="support">
+        <h2 class="section-title">پشتیبانی</h2>
+        <div class="support-form">
+            <input type="text" id="support-name" placeholder="نام شما">
+            <textarea id="support-message" placeholder="نظر یا پیشنهاد شما"></textarea>
+            <button class="submit-btn" onclick="submitSupport()">ارسال</button>
+        </div>
+    </section>
+
+    <section class="dashboard-content" id="report">
+        <h2 class="section-title">گزارش خطا</h2>
+        <div class="report-form">
+            <input type="text" id="report-name" placeholder="نام شما">
+            <textarea id="report-message" placeholder="توضیح خطا یا مشکل"></textarea>
+            <button class="submit-btn" onclick="submitReport()">ارسال</button>
+        </div>
+    </section>
+
+    <section class="dashboard-content" id="about">
+        <h2 class="section-title">درباره ما</h2>
+        <div class="about-section">
+            <p>سایت GameBad توسط <strong>امیرحسین</strong>، یه عاشق گیم و تکنولوژی، ساخته شده! امیرحسین با کلی شور و
+                اشتیاق این پلتفرم رو طراحی کرده تا بهترین بازی‌های موبایلی رو با شما به اشتراک بذاره. ازش تشکر می‌کنیم
+                که این فضای جذاب رو برای گیمرها فراهم کرده! 😎 اگه نظری داری، حتما تو بخش پشتیبانی بگو!</p>
+        </div>
+    </section>
+
+    <section id="all-games" style="display: none;">
+        <h2 class="section-title">نتایج جستجو</h2>
+        <div class="games-grid" id="search-grid"></div>
+    </section>
+
+    <footer>
+        <p>© ۲۰۲۵ GameBad - طراحی و مدیریت: امیرحسین. نظرت رو بگو!</p>
+    </footer>
+
+    <script>
+        const games = [
+            { name: "پابجی موبایل", dev: "Tencent", genre: "بتل رویال", online: "آنلاین", size: "۱ گیگابایت", score: "۴.۳/۵", link: "https://play.google.com/store/search?q=PUBG+MOBILE", logo: "https://upload.wikimedia.org/wikipedia/commons/0/0a/PUBG_Mobile_logo.png" },
+            { name: "کندی کراش ساگا", dev: "King", genre: "پازل", online: "آفلاین", size: "۱۰۰ مگابایت", score: "۴.۶/۵", link: "https://play.google.com/store/search?q=Candy+Crush+Saga", logo: "https://static.wikia.nocookie.net/logopedia/images/a/a7/Candy_Crush_Saga_logo.png/revision/latest?cb=20240824041331" },
+            { name: "فری فایر", dev: "Garena", genre: "بتل رویال", online: "آنلاین", size: "۷۰۰ مگابایت", score: "۴.۲/۵", link: "https://play.google.com/store/search?q=Free+Fire", logo: "https://upload.wikimedia.org/wikipedia/commons/6/6b/Logo_of_Slither.io-2024.png" },
+            { name: "رابلاکس", dev: "Roblox Corporation", genre: "پلتفرم UGC", online: "آنلاین", size: "۱۵۰ مگابایت", score: "۴.۴/۵", link: "https://play.google.com/store/search?q=Roblox", logo: "https://upload.wikimedia.org/wikipedia/commons/0/0c/Roblox_2021_Logo.png" },
+            { name: "سابوی سرفرز", dev: "SYBO", genre: "دویدن بی‌پایان", online: "آفلاین", size: "۱۵۰ مگابایت", score: "۴.۵/۵", link: "https://play.google.com/store/search?q=Subway+Surfers", logo: "https://www.stickpng.com/assets/images/5a0c8f6f2f1a8c2d6f8b6f8a.png" },
+            { name: "فورتنایت موبایل", dev: "Epic Games", genre: "بتل رویال", online: "آنلاین", size: "۲ گیگابایت", score: "۴.۵/۵", link: "https://play.google.com/store/search?q=Fortnite", logo: "https://upload.wikimedia.org/wikipedia/commons/7/70/Fortnite_logo.png" },
+            { name: "کلش آف کلنز", dev: "Supercell", genre: "استراتژی", online: "آنلاین", size: "۲۰۰ مگابایت", score: "۴.۵/۵", link: "https://play.google.com/store/search?q=Clash+of+Clans", logo: "https://via.placeholder.com/100" },
+            { name: "آمونگ آس", dev: "InnerSloth", genre: "چندنفره", online: "آنلاین", size: "۷۰ مگابایت", score: "۴.۴/۵", link: "https://play.google.com/store/search?q=Among+Us", logo: "https://via.placeholder.com/100" },
+            { name: "کلش رویال", dev: "Supercell", genre: "استراتژی", online: "آنلاین", size: "۱۲۰ مگابایت", score: "۴.۳/۵", link: "https://play.google.com/store/search?q=Clash+Royale", logo: "https://via.placeholder.com/100" },
+            { name: "ماینکرفت", dev: "Mojang", genre: "ماجراجویی", online: "آنلاین", size: "۳۰۰ مگابایت", score: "۴.۶/۵", link: "https://play.google.com/store/search?q=Minecraft", logo: "https://via.placeholder.com/100" },
+            { name: "کال آو دیوتی موبایل", dev: "Activision", genre: "اکشن", online: "آنلاین", size: "۱.۵ گیگابایت", score: "۴.۴/۵", link: "https://play.google.com/store/search?q=Call+of+Duty+Mobile", logo: "https://via.placeholder.com/100" },
+            { name: "هی دی", dev: "Sandstorm", genre: "پازل", online: "آفلاین", size: "۸۰ مگابایت", score: "۴.۲/۵", link: "https://play.google.com/store/search?q=Hay+Day", logo: "https://via.placeholder.com/100" },
+            { name: "براول استارز", dev: "Supercell", genre: "اکشن", online: "آنلاین", size: "۱۵۰ مگابایت", score: "۴.۳/۵", link: "https://play.google.com/store/search?q=Brawl+Stars", logo: "https://via.placeholder.com/100" },
+            { name: "تمپل ران", dev: "Imangi Studios", genre: "دویدن بی‌پایان", online: "آفلاین", size: "۱۰۰ مگابایت", score: "۴.۴/۵", link: "https://play.google.com/store/search?q=Temple+Run", logo: "https://via.placeholder.com/100" },
+            { name: "اسفالت ۹", dev: "Gameloft", genre: "ریسینگ", online: "آنلاین", size: "۱.۸ گیگابایت", score: "۴.۵/۵", link: "https://play.google.com/store/search?q=Asphalt+9", logo: "https://via.placeholder.com/100" },
+            { name: "فارم‌ویل ۳", dev: "Zynga", genre: "شبیه‌سازی", online: "آنلاین", size: "۲۰۰ مگابایت", score: "۴.۱/۵", link: "https://play.google.com/store/search?q=FarmVille+3", logo: "https://via.placeholder.com/100" },
+            { name: "هوم‌اسکیپ", dev: "Playrix", genre: "پازل", online: "آفلاین", size: "۱۵۰ مگابایت", score: "۴.۳/۵", link: "https://play.google.com/store/search?q=Homescapes", logo: "https://via.placeholder.com/100" },
+            { name: "گارنا آندد", dev: "Garena", genre: "اکشن", online: "آنلاین", size: "۸۰۰ مگابایت", score: "۴.۲/۵", link: "https://play.google.com/store/search?q=Garena+Undead", logo: "https://via.placeholder.com/100" },
+            { name: "شادو فایت ۳", dev: "Nekki", genre: "اکشن", online: "آنلاین", size: "۱۲۰ مگابایت", score: "۴.۴/۵", link: "https://play.google.com/store/search?q=Shadow+Fight+3", logo: "https://via.placeholder.com/100" },
+            { name: "پازل کوئست", dev: "505 Games", genre: "پازل", online: "آفلاین", size: "۲۰۰ مگابایت", score: "۴.۳/۵", link: "https://play.google.com/store/search?q=Puzzle+Quest", logo: "https://via.placeholder.com/100" },
+            { name: "سیمز موبایل", dev: "EA", genre: "شبیه‌سازی", online: "آنلاین", size: "۱۱۰ مگابایت", score: "۴.۲/۵", link: "https://play.google.com/store/search?q=The+Sims+Mobile", logo: "https://via.placeholder.com/100" },
+            { name: "جت‌پک جوی‌راید", dev: "Halfbrick", genre: "دویدن بی‌پایان", online: "آفلاین", size: "۹۰ مگابایت", score: "۴.۳/۵", link: "https://play.google.com/store/search?q=Jetpack+Joyride", logo: "https://via.placeholder.com/100" },
+            { name: "انگری بردز ۲", dev: "Rovio", genre: "پازل", online: "آفلاین", size: "۸۰ مگابایت", score: "۴.۴/۵", link: "https://play.google.com/store/search?q=Angry+Birds+2", logo: "https://via.placeholder.com/100" },
+            { name: "دد تریگر ۲", dev: "Madfinger", genre: "اکشن", online: "آنلاین", size: "۵۰۰ مگابایت", score: "۴.۳/۵", link: "https://play.google.com/store/search?q=Dead+Trigger+2", logo: "https://via.placeholder.com/100" },
+            { name: "فلیپی برد", dev: "GEARS Studios", genre: "آرکید", online: "آفلاین", size: "۲۰ مگابایت", score: "۴.۱/۵", link: "https://play.google.com/store/search?q=Flappy+Bird", logo: "https://via.placeholder.com/100" },
+            { name: "پلنتس vs زامبیز", dev: "EA", genre: "استراتژی", online: "آفلاین", size: "۱۰۰ مگابایت", score: "۴.۴/۵", link: "https://play.google.com/store/search?q=Plants+vs+Zombies", logo: "https://via.placeholder.com/100" },
+            { name: "کات د روپ", dev: "ZeptoLab", genre: "پازل", online: "آفلاین", size: "۵۰ مگابایت", score: "۴.۵/۵", link: "https://play.google.com/store/search?q=Cut+the+Rope", logo: "https://via.placeholder.com/100" },
+            { name: "دراگون بال لجندز", dev: "Bandai Namco", genre: "اکشن", online: "آنلاین", size: "۴۰۰ مگابایت", score: "۴.۴/۵", link: "https://play.google.com/store/search?q=Dragon+Ball+Legends", logo: "https://via.placeholder.com/100" },
+            { name: "مورتال کمبت", dev: "Warner Bros", genre: "مبارزه‌ای", online: "آنلاین", size: "۱ گیگابایت", score: "۴.۳/۵", link: "https://play.google.com/store/search?q=Mortal+Kombat", logo: "https://via.placeholder.com/100" },
+            { name: "فوتبال استریک", dev: "First Touch Games", genre: "ورزشی", online: "آنلاین", size: "۳۰۰ مگابایت", score: "۴.۴/۵", link: "https://play.google.com/store/search?q=Football+Strike", logo: "https://via.placeholder.com/100" },
+            { name: "هیل کلایمب ریسینگ", dev: "Fingersoft", genre: "ریسینگ", online: "آفلاین", size: "۸۰ مگابایت", score: "۴.۳/۵", link: "https://play.google.com/store/search?q=Hill+Climb+Racing", logo: "https://via.placeholder.com/100" },
+            { name: "گارنا اسپید دریفترز", dev: "Garena", genre: "ریسینگ", online: "آنلاین", size: "۱.۲ گیگابایت", score: "۴.۲/۵", link: "https://play.google.com/store/search?q=Garena+Speed+Drifters", logo: "https://via.placeholder.com/100" },
+            { name: "ورد آف تانکز", dev: "Wargaming", genre: "اکشن", online: "آنلاین", size: "۲ گیگابایت", score: "۴.۳/۵", link: "https://play.google.com/store/search?q=World+of+Tanks", logo: "https://via.placeholder.com/100" },
+            { name: "اسنایپر ۳دی", dev: "Fun Games For Free", genre: "اکشن", online: "آنلاین", size: "۱.۱ گیگابایت", score: "۴.۴/۵", link: "https://play.google.com/store/search?q=Sniper+3D", logo: "https://via.placeholder.com/100" },
+            { name: "فال‌گایز موبایل", dev: "Mediatonic", genre: "چندنفره", online: "آنلاین", size: "۵۰۰ مگابایت", score: "۴.۳/۵", link: "https://play.google.com/store/search?q=Fall+Guys+Mobile", logo: "https://via.placeholder.com/100" }
+        ];
+
+        function renderGames(container, gameList) {
+            container.innerHTML = '';
+            gameList.forEach(game => {
+                const card = document.createElement('div');
+                card.className = 'game-card';
+                card.innerHTML = `
+                    <img src="${game.logo}" alt="${game.name}" class="game-logo">
+                    <h3>${game.name}</h3>
+                    <p>توسعه‌دهنده: ${game.dev}</p>
+                    <p>ژانر: ${game.genre}</p>
+                    <p>وضعیت: ${game.online}</p>
+                    <p>حجم تقریبی: ${game.size}</p>
+                    <p>امتیاز: ${game.score}</p>
+                    <a href="${game.link}" class="download-btn" target="_blank">دانلود</a>
+                    <button class="favorite-btn" data-name="${game.name}" onclick="toggleFavorite('${game.name}')">
+                        ${isFavorite(game.name) ? 'حذف از علاقه‌مندی‌ها' : 'اضافه به علاقه‌مندی‌ها'}
+                    </button>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // مدیریت علاقه‌مندی‌ها
+        function getFavorites() {
+            return JSON.parse(localStorage.getItem('favorites') || '[]');
+        }
+
+        function isFavorite(gameName) {
+            return getFavorites().includes(gameName);
+        }
+
+        function toggleFavorite(gameName) {
+            let favorites = getFavorites();
+            if (favorites.includes(gameName)) {
+                favorites = favorites.filter(name => name !== gameName);
+            } else {
+                favorites.push(gameName);
+            }
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+            renderFavorites();
+            // به‌روزرسانی دکمه‌های علاقه‌مندی در تمام بخش‌ها
+            document.querySelectorAll('.favorite-btn').forEach(btn => {
+                const name = btn.dataset.name;
+                btn.textContent = isFavorite(name) ? 'حذف از علاقه‌مندی‌ها' : 'اضافه به علاقه‌مندی‌ها';
+                btn.classList.toggle('active', isFavorite(name));
+            });
+        }
+
+        function renderFavorites() {
+            const favorites = getFavorites();
+            const favoriteGames = games.filter(game => favorites.includes(game.name));
+            renderGames(document.getElementById('favorites-grid'), favoriteGames);
+        }
+
+        // نمایش اولیه ۵ بازی پرطرفدار
+        const topGames = games.slice(0, 5);
+        renderGames(document.getElementById('top-grid'), topGames);
+
+        // بازی‌های پیشنهادی رندوم
+        const suggestedGames = games.slice(5).sort(() => 0.5 - Math.random()).slice(0, 3);
+        renderGames(document.getElementById('suggested-grid'), suggestedGames);
+
+        // جستجو و فیلتر
+        const searchInput = document.getElementById('search');
+        const topGamesSection = document.getElementById('top-games');
+        const suggestedSection = document.getElementById('suggested-games');
+        const allGamesSection = document.getElementById('all-games');
+        const searchGrid = document.getElementById('search-grid');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        let currentFilter = 'all';
+        let currentGenre = '';
+
+        function updateResults() {
+            const query = searchInput.value.trim();
+            let filtered = games;
+            if (currentFilter !== 'all') {
+                filtered = filtered.filter(game => game.online === currentFilter);
+            }
+            if (currentGenre) {
+                filtered = filtered.filter(game => game.genre === currentGenre);
+            }
+            if (query) {
+                filtered = filtered.filter(game => game.name.includes(query));
+            }
+            if (query || currentFilter !== 'all' || currentGenre) {
+                topGamesSection.style.display = 'none';
+                suggestedSection.style.display = 'none';
+                allGamesSection.style.display = 'block';
+                renderGames(searchGrid, filtered);
+            } else {
+                topGamesSection.style.display = 'block';
+                suggestedSection.style.display = 'block';
+                allGamesSection.style.display = 'none';
+                renderGames(document.getElementById('top-grid'), topGames);
+            }
+        }
+
+        searchInput.addEventListener('input', updateResults);
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                if (e.target.dataset.filter) {
+                    currentFilter = e.target.dataset.filter;
+                    currentGenre = '';
+                } else if (e.target.dataset.genre) {
+                    currentGenre = e.target.dataset.genre;
+                    currentFilter = 'all';
+                }
+                updateResults();
+            });
+        });
+
+        // منوی همبرگری
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        // داشبورد
+        const dashboardBtns = document.querySelectorAll('.dashboard-btn');
+        const dashboardContents = document.querySelectorAll('.dashboard-content');
+
+        dashboardBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                dashboardBtns.forEach(b => b.classList.remove('active'));
+                dashboardContents.forEach(c => c.classList.remove('active'));
+                e.target.classList.add('active');
+                document.getElementById(e.target.dataset.section).classList.add('active');
+                if (e.target.dataset.section === 'home') {
+                    allGamesSection.style.display = 'none';
+                    topGamesSection.style.display = 'block';
+                    suggestedSection.style.display = 'block';
+                } else if (e.target.dataset.section === 'favorites') {
+                    renderFavorites();
+                }
+                if (window.innerWidth <= 600) {
+                    navMenu.classList.remove('active');
+                    hamburger.classList.remove('active');
+                }
+            });
+        });
+
+        function submitSupport() {
+            const name = document.getElementById('support-name').value;
+            const message = document.getElementById('support-message').value;
+            if (name && message) {
+                alert('نظر شما با موفقیت ارسال شد! تشکر، ' + name);
+                document.getElementById('support-name').value = '';
+                document.getElementById('support-message').value = '';
+            } else {
+                alert('لطفاً نام و پیام خود را وارد کنید.');
+            }
+        }
+
+        function submitReport() {
+            const name = document.getElementById('report-name').value;
+            const message = document.getElementById('report-message').value;
+            if (name && message) {
+                alert('گزارش شما با موفقیت ارسال شد! تشکر، ' + name);
+                document.getElementById('report-name').value = '';
+                document.getElementById('report-message').value = '';
+            } else {
+                alert('لطفاً نام و توضیح خطا را وارد کنید.');
+            }
+        }
+
+        // رندر اولیه علاقه‌مندی‌ها
+        renderFavorites();
+    </script>
+</body>
+
+</html>
